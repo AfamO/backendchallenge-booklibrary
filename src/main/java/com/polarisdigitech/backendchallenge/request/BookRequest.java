@@ -17,6 +17,15 @@ public class BookRequest {
     private String title;
     private String author;
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    private String gender;
     public String getIsbn() {
         return isbn;
     }

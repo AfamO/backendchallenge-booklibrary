@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+<title>Books Web Application</title>
+</head>
+
+<body>
+<div align="center" th:switch="${books}">
+    <h2 th:case="null">No books yet!</h2>
+    <div th:case="*">
+        <h2>Books</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.isbn}"></td>
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.gender}"></td>
+                <td th:text="${book.country}"></td>
+                <td><a th:href="@{/edit/{isbn}(isbn=${book.isbn})}">Edit</a></td>
+                <td><a th:href="@{/delete/{isbn}(isbn=${book.isbn})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/add_book">Add a new book</a></p>
+</div>
+</body>
+
+</html>

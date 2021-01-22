@@ -14,8 +14,12 @@ public class BookResponse {
 
     @Builder.Default
     private int status = HttpStatus.CREATED.value();
+
     @Builder.Default
     private String message = "success";
+
+    private  Object data = null;
+
 
 }
 

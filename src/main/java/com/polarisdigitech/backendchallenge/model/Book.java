@@ -1,5 +1,6 @@
 package com.polarisdigitech.backendchallenge.model;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 public class Book {
 
     @Id
+    //@NotNull(message ="ISBN is compulsory")
     private String isbn;
     private String title;
     private String author;
@@ -61,6 +63,15 @@ public class Book {
         this.country = country;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    private String gender;
     private String publisher;
     private String country;
 

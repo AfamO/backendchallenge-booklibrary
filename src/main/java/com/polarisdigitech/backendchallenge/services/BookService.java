@@ -16,38 +16,53 @@ public class BookService {
     public BookRepository bookRepository;
 
     public BookResponse addBooks(BookRequest bookRequest) {
+        BookResponse bookResponse = new BookResponse();
         if (bookRequest != null) {
+            if(bookRepository.findById(bookRequest.getIsbn()).isPresent()){
+                bookResponse.setStatus(500);
+                bookResponse.setMessage("Error: The book with this ISBN, already exists");
+                return bookResponse;
+            }
             Book book = new Book();
             book.setAuthor(bookRequest.getAuthor());
             book.setCountry(bookRequest.getCountry());
             book.setIsbn(bookRequest.getIsbn());
             book.setTitle(bookRequest.getTitle());
             book.setPublisher(bookRequest.getPublisher());
-            bookRepository.save(book);
-            return new BookResponse();
+            book.setGender(bookRequest.getGender());
+            book = bookRepository.save(book);
+            bookResponse.setData(book);
+            return bookResponse;
         }
-        BookResponse bookResponse = new BookResponse();
         bookResponse.setStatus(500);
         bookResponse.setMessage("Failed");
         return bookResponse;
     }
 
-    public Book findABook(String isbn) {
+    public BookResponse findABook(String isbn) {
+        BookResponse bookResponse = new BookResponse();
         if (isbn != null && !isbn.equals(" ")) {
             if (bookRepository.findById(isbn).isPresent()) {
-                return bookRepository.findById(isbn).get();
-            } else {
-                return null;
+                bookResponse.setData(bookRepository.findById(isbn).get());
+                return bookResponse;
+            }
+            else{
+                bookResponse.setStatus(404);
+                bookResponse.setMessage("Error: Book not found");
+                return bookResponse;
             }
         }
-        return null;
+        bookResponse.setStatus(500);
+        bookResponse.setMessage("Failed");
+        return bookResponse;
     }
 
     public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    public boolean updateBook(BookRequest bookRequest) {
+    public BookResponse updateBook(BookRequest bookRequest) {
+        BookResponse bookResponse = new BookResponse();
         if (bookRequest != null) {
             if (bookRepository.findById(bookRequest.getIsbn()).isPresent()) {
                 Book book = bookRepository.findById(bookRequest.getIsbn()).get();
@@ -56,21 +71,38 @@ public class BookService {
                 book.setIsbn(bookRequest.getIsbn());
                 book.setTitle(bookRequest.getTitle());
                 book.setPublisher(bookRequest.getPublisher());
-                bookRepository.save(book);
-                return true;
+                book.setGender(bookRequest.getGender());
+                book = bookRepository.save(book);
+                bookResponse.setData(book);
+                return bookResponse;
 
             }
+            else {
+                bookResponse.setStatus(404);
+                bookResponse.setMessage("Error: Book with this ISBN not found");
+                return bookResponse;
+            }
         }
-        return false;
+        bookResponse.setStatus(500);
+        bookResponse.setMessage("Failed");
+        return bookResponse;
     }
 
-    public boolean deleteABook(String isbn) {
+    public BookResponse deleteABook(String isbn) {
+        BookResponse bookResponse = new BookResponse();
         if (isbn != null && !isbn.equals(" ")) {
             if (bookRepository.findById(isbn).isPresent()) {
                 bookRepository.deleteById(isbn);
-                return true;
+                return new BookResponse();
+            }
+            else{
+                bookResponse.setStatus(404);
+                bookResponse.setMessage("Error: ISBN not found");
+                return bookResponse;
             }
         }
-        return false;
+        bookResponse.setStatus(500);
+        bookResponse.setMessage("Failed");
+        return bookResponse;
     }
 }
