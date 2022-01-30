@@ -5,6 +5,9 @@ import com.polarisdigitech.backendchallenge.request.BookRequest;
 import com.polarisdigitech.backendchallenge.response.BookResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -45,7 +48,9 @@ public class BookViewController {
 
     @RequestMapping(value = "/view-books", method = RequestMethod.GET)
     public String showBooksPage(ModelMap modelMap){
-        modelMap.addAttribute("books", bookService.getAllBooks());
+        Sort sort = Sort.by(Sort.Direction.ASC,"author");
+        Pageable pageable = PageRequest.of(0,4,sort);
+        modelMap.addAttribute("books", bookService.getAllBooks(pageable));
         return "list-books";
     }
 

@@ -5,6 +5,7 @@ import com.polarisdigitech.backendchallenge.repository.BookRepository;
 import com.polarisdigitech.backendchallenge.request.BookRequest;
 import com.polarisdigitech.backendchallenge.response.BookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 public class BookService {
 
     @Autowired
-    public BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     public BookResponse addBooks(BookRequest bookRequest) {
         BookResponse bookResponse = new BookResponse();
@@ -57,8 +58,20 @@ public class BookService {
         return bookResponse;
     }
 
-    public Iterable<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public Iterable<Book> getAllBooks(Pageable pageable) {
+
+        return bookRepository.findAll(pageable);
+    }
+
+    public Book getOne(String isbn){
+        return bookRepository.getOne(isbn) ;
+    }
+    
+    public List<Book> getBookByAuthor(String author) {
+        return bookRepository.selectMyBookByAuthor(author);
+    }
+    public List<Book> getBookByGender(String gender) {
+        return bookRepository.selectMyBookByGender(gender);
     }
 
     public BookResponse updateBook(BookRequest bookRequest) {
