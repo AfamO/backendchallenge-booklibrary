@@ -1,6 +1,7 @@
+
 package com.polarisdigitech.backendchallenge.controllers;
 
-import com.polarisdigitech.backendchallenge.model.Book;
+import com.polarisdigitech.backendchallenge.model.book.Book;
 import com.polarisdigitech.backendchallenge.request.BookRequest;
 import com.polarisdigitech.backendchallenge.response.BookResponse;
 import com.polarisdigitech.backendchallenge.services.BookService;

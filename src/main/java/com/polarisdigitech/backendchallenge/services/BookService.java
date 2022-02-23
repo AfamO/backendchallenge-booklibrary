@@ -1,19 +1,21 @@
+
 package com.polarisdigitech.backendchallenge.services;
 
-import com.polarisdigitech.backendchallenge.model.Book;
-import com.polarisdigitech.backendchallenge.repository.BookRepository;
+import com.polarisdigitech.backendchallenge.model.book.Book;
+import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.request.BookRequest;
 import com.polarisdigitech.backendchallenge.response.BookResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
 
-    @Autowired
+
     private BookRepository bookRepository;
 
     public BookResponse addBooks(BookRequest bookRequest) {

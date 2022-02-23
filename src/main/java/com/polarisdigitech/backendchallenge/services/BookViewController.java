@@ -1,8 +1,8 @@
+
 package com.polarisdigitech.backendchallenge.services;
 
-import com.polarisdigitech.backendchallenge.model.Book;
+import com.polarisdigitech.backendchallenge.model.book.Book;
 import com.polarisdigitech.backendchallenge.request.BookRequest;
-import com.polarisdigitech.backendchallenge.response.BookResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +26,12 @@ public class BookViewController {
     public String showWelcomePage(Model model){
         log.info("Received incoming requests for BookViewController");
         return "welcome";
+    }
+
+    @RequestMapping(value = "/uploadForm", method = RequestMethod.GET)
+    public String showUploadFormPage(Model model){
+        log.info("Received incoming requests for BookViewController");
+        return "uploadForm";
     }
 
     @RequestMapping(value = "/add_book", method = RequestMethod.GET)
