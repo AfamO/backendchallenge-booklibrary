@@ -30,7 +30,7 @@ public class BookViewController {
 
     @RequestMapping(value = "/uploadForm", method = RequestMethod.GET)
     public String showUploadFormPage(Model model){
-        log.info("Received incoming requests for BookViewController");
+        log.info("Received incoming requests for uploadForm BookViewController");
         return "uploadForm";
     }
 

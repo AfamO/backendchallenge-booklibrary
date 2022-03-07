@@ -4,6 +4,7 @@ package com.polarisdigitech.backendchallenge.config.db.product;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 //import org.springframework.orm.jpa.EntityManagerFactoryBuilder;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
@@ -23,6 +28,7 @@ import java.util.HashMap;
         entityManagerFactoryRef = "productDbEntityManager",
         basePackages = {"com.polarisdigitech.backendchallenge.repository.product"}
 )
+@EnableTransactionManagement
 @Slf4j
 public class ProductDbConfig {
 
@@ -59,5 +65,9 @@ public class ProductDbConfig {
        return localContainerEntityManagerFactoryBean;
 
     }
-                                    //*/
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager productDbTransactionManager(@Qualifier("productDbEntityManager")EntityManagerFactory productEntityManagerFactory){
+        return new JpaTransactionManager(productEntityManagerFactory);
+    }
 }

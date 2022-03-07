@@ -7,14 +7,17 @@ import com.polarisdigitech.backendchallenge.model.product.Item;
 import com.polarisdigitech.backendchallenge.model.product.Product;
 import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.repository.product.ProductRepository;
+import com.polarisdigitech.backendchallenge.services.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.jpa.vendor.Database;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,13 +57,21 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		Page<List<Book>> listPage = bookRepository.selectBookByCountry("Nigeria", PageRequest.of(0,5));
 		log.info("Pageable Results =={}",listPage.getContent());
 		log.info("Retrieved Book List =={}",bookRepository.selectMyBookByGender("male"));
-		log.info("Update Result =={}",bookRepository.updateCount("Criterion Publishers","012-123-456700"));
+		//log.info("Update Result =={}",bookRepository.updateCount("Criterion Publishers","012-123-456700"));
 		log.info("Retrieved Book Instance By Country and Isbn =={}",bookRepository.selectByIsbnAndCountry("012-123-456700","England"));
 		log.info("Retrieved Books By Gender:{}",bookRepository.selectBooksHavingParticularGender(Arrays.asList("female")));
 		log.info("Retrieved product =={}",productRepository.findOne(Product.class,1L));
 		log.info("Retrieved item =={}",productRepository.findOne(Item.class,2L));
 		log.info("Retrieved item =={}",productRepository.findOne(Item.class,3L));
 		log.info("Retrieved result =={}",productRepository.findAllByIds(Item.class,Arrays.asList(1L,2L)));
-		log.info("Saving Item :::",productRepository.save(new Item("Dispenser",500D)).getName());
+		log.info("Saving Item :::{}", productRepository.save(new Item("Bucket",600D)));
+	}
+
+	@Bean
+	CommandLineRunner init(StorageService storageService){
+		return ((args) -> {
+			//storageService.deleteAll();
+			//storageService.init();
+		});
 	}
 }

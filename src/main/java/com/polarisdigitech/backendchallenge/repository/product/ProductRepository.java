@@ -44,9 +44,9 @@ public class ProductRepository {
     }
     @Transactional
     public <T> T save(final T tClass){
-        log.info("Saving:::{}",tClass);
+        log.info("Before saving, entity name::{}",tClass);
         entityManager.persist(tClass);
 
-        return tClass;
+        return (T)tClass;
     }
 }
