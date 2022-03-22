@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.jpa.vendor.Database;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,10 +42,6 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		List<BookDto> dtos = helpers.mapList(bookList,BookDto.class);
 		log.info("My BookDtos == {}",dtos);
 		helpers.myMapping();
-
-
-
-
 	}
 
 	@Override
@@ -63,8 +60,14 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		log.info("Retrieved product =={}",productRepository.findOne(Product.class,1L));
 		log.info("Retrieved item =={}",productRepository.findOne(Item.class,2L));
 		log.info("Retrieved item =={}",productRepository.findOne(Item.class,3L));
-		log.info("Retrieved result =={}",productRepository.findAllByIds(Item.class,Arrays.asList(1L,2L)));
-		log.info("Saving Item :::{}", productRepository.save(new Item("Bucket",600D)));
+		log.info("Retrieved result =={}",productRepository.findAllByIds(Item.class,Arrays.asList(1L,2L,5L,6L)));
+		//Item item = productRepository.save(new Item("Refrigerator",5000D));
+		List bulkProducts = Arrays.asList(new Product("Printer",530d),new Product("Mouse",160d),new Product("Bag",30d));
+		//List<Product> product = productRepository.save(bulkProducts);
+		//log.info("Saving product :::{}",product);
+		log.info("Results from CriteriaQuery For Item table=={}",productRepository.searchDBForGivenDateRange(Item.class,LocalDateTime.parse("2022-03-21T15:40:56"), LocalDateTime.parse("2022-03-21T15:42:52")));
+		log.info("Results from CriteriaQuery for Product table =={} ",productRepository.searchDBForGivenDateRange(Product.class,LocalDateTime.parse("2022-03-22T09:30:48"), LocalDateTime.parse("2022-03-22T09:44:47")));
+		log.info("Results fro CriteriaQuery Searching Item=={}",productRepository.findInTableWithNameLike(Item.class,"kett"));
 	}
 
 	@Bean
