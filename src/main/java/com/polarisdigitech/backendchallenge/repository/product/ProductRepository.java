@@ -1,7 +1,6 @@
 
 package com.polarisdigitech.backendchallenge.repository.product;
 
-import com.polarisdigitech.backendchallenge.model.product.Item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -90,7 +89,7 @@ public class ProductRepository {
             bulkLists.stream().forEach((t)->entityManager.persist(t));
         }
         else
-            entityManager.persist(tClass);
+            entityManager.merge(tClass);
         return (T)tClass;
     }
 }
