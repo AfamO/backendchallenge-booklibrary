@@ -1,9 +1,6 @@
 package com.polarisdigitech.backendchallenge.model.product;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,13 +9,15 @@ import java.util.Set;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//@EqualsAndHashCode(exclude = {"id","name","subjects", "createdDate"})
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@EqualsAndHashCode.Exclude
     private Long id;
+    @EqualsAndHashCode.Exclude
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -28,12 +27,14 @@ public class Subject {
             inverseJoinColumns = @JoinColumn(name = "student_id")
             )
 
+    @EqualsAndHashCode.Exclude
     private Set<Student> enrolledStudents = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id",referencedColumnName = "id")
+    @EqualsAndHashCode.Exclude
     private Teacher teacher;
-
+    @EqualsAndHashCode.Exclude
     private LocalDateTime createdDate=LocalDateTime.now();
 
     public Subject(String name) {

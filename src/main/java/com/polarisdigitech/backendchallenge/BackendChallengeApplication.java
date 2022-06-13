@@ -8,7 +8,6 @@ import com.polarisdigitech.backendchallenge.model.product.Subject;
 import com.polarisdigitech.backendchallenge.model.product.Product;
 import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.repository.product.ProductRepository;
-import com.polarisdigitech.backendchallenge.services.ProductService;
 import com.polarisdigitech.backendchallenge.services.StorageService;
 import com.polarisdigitech.backendchallenge.services.StudentService;
 import com.polarisdigitech.backendchallenge.services.SubjectService;
@@ -21,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -87,6 +87,10 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		log.info("Results fro CriteriaQuery Searching Item=={}",productRepository.findInTableWithNameLike(Subject.class,"kett"));
 		//createStudentAndSubject(new Subject("Geography"), new Student("John Dada Jr"));
 		//enrollStudents(1L,167L);
+		log.info("My Created URI =={}", URI.create("/1"));
+		int [] left = {1,2,3};
+		log.info("Printing ArrayLst>>>");
+		Arrays.asList(left).stream().forEach(System.out::println);
 	}
 
 	@Bean
