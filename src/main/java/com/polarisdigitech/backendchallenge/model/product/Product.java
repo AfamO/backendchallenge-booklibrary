@@ -14,6 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
+@NamedStoredProcedureQuery(
+        name = "findTotalProductsByPrice",
+        procedureName = "GET_TOTAL_PRODUCTS_BY_PRICE",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "price_in", type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "count_out", type = Integer.class)
+        }
+)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

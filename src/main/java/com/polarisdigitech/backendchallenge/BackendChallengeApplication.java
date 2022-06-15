@@ -91,6 +91,11 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		int [] left = {1,2,3};
 		log.info("Printing ArrayLst>>>");
 		Arrays.asList(left).stream().forEach(System.out::println);
+		productRepository.findCarByYearWithNamedStored(2015);
+		log.info("The createdAndNonStored storedProcedure queried result =={}",productRepository.findCarByYearWithNoNameStoredProcedure(2010));
+		log.info("The createdAndStoredProcedure queried result =={}",productRepository.countTotalProductsGivenAPrice(200));
+
+
 	}
 
 	@Bean

@@ -1,15 +1,15 @@
 
 package com.polarisdigitech.backendchallenge.repository.product;
 
+import com.polarisdigitech.backendchallenge.model.product.Car;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -91,5 +91,30 @@ public class ProductRepository {
         else
             entityManager.merge(tClass);
         return (T)tClass;
+    }
+
+    public void findCarByYearWithNamedStored(int year) {
+        StoredProcedureQuery storedProcedureFindByYearQuery =
+                entityManager.createNamedStoredProcedureQuery("findByYearProcedure");
+        StoredProcedureQuery storedProcedureQuery =
+                storedProcedureFindByYearQuery.setParameter("p_year", year);
+      List<Car> carList  =  storedProcedureQuery.getResultList();
+      log.info("The storedProcedure queried result =={}",carList);
+    }
+
+    public List<Car> findCarByYearWithNoNameStoredProcedure(int year) {
+        StoredProcedureQuery storedProcedure = entityManager.createStoredProcedureQuery("FIND_CAR_BY_YEAR", Car.class);
+        storedProcedure.registerStoredProcedureParameter("yearParam",Integer.class, ParameterMode.IN)
+                .setParameter("yearParam",year);
+        return storedProcedure.getResultList();
+
+    }
+
+    @Transactional
+    public int countTotalProductsGivenAPrice(int price){
+        StoredProcedureQuery storedProcedureQuery = entityManager.createNamedStoredProcedureQuery("findTotalProductsByPrice");
+        storedProcedureQuery.setParameter("price_in",price);
+        return storedProcedureQuery.executeUpdate();
+
     }
 }
