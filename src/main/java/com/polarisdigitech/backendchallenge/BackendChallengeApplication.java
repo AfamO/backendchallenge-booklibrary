@@ -1,5 +1,6 @@
 package com.polarisdigitech.backendchallenge;
 
+import com.polarisdigitech.backendchallenge.aop.Operation;
 import com.polarisdigitech.backendchallenge.helpers.Helpers;
 import com.polarisdigitech.backendchallenge.helpers.StorageProperties;
 import com.polarisdigitech.backendchallenge.model.book.Book;
@@ -16,7 +17,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -37,11 +40,23 @@ public class BackendChallengeApplication implements CommandLineRunner {
 	private final StudentService studentService;
 	private final SubjectService subjectService;
 
-	public BackendChallengeApplication(BookRepository bookRepository, ProductRepository productRepository, StudentService studentService, SubjectService subjectService) {
+	public BackendChallengeApplication(BookRepository bookRepository, ProductRepository productRepository, StudentService studentService, SubjectService subjectService, Operation operation) {
 		this.bookRepository = bookRepository;
 		this.productRepository = productRepository;
 		this.studentService = studentService;
 		this.subjectService = subjectService;
+	}
+
+	public void invokeAOP(){
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Operation operation = (Operation) applicationContext.getBean("opBean");
+		log.info("Calling msg");
+		operation.msg();
+		log.info("Calling m");
+		operation.m();
+		log.info("Calling k");
+		operation.k();
+
 	}
 
 	public static void main(String[] args) {
@@ -94,8 +109,7 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		productRepository.findCarByYearWithNamedStored(2015);
 		log.info("The createdAndNonStored storedProcedure queried result =={}",productRepository.findCarByYearWithNoNameStoredProcedure(2010));
 		log.info("The createdAndStoredProcedure queried result =={}",productRepository.countTotalProductsGivenAPrice(200));
-
-
+		//invokeAOP();
 	}
 
 	@Bean
