@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Controller
@@ -54,13 +58,26 @@ public class FileUploadController {
 
     }
     @GetMapping("/list")
-    public String listUploadedFiles(Model model) throws IOException{
-        model.addAttribute("files", storageService.loadAll()
-                .map((path)-> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                        "serveFile",
-                        path.getFileName().toString()).build().toUri().toString())
-                        .collect(Collectors.toList()));
-        return "uploadForm";
+    public CompletableFuture<String> listUploadedFiles(Model model) throws IOException{
+
+        List<String> fileLists = null;
+        try {
+            fileLists = storageService.loadAll().get()
+                    .map((path)-> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                            "serveFile",
+                            path.getFileName().toString()).build().toUri().toString())
+                    .collect(Collectors.toList());
+        } catch (InterruptedException e) {
+            log.info("Failed to read records::{}",e);
+            return CompletableFuture.completedFuture( ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build().getBody().toString());
+
+        } catch (ExecutionException e) {
+            log.info("Failed to read records::{}",e);
+            return CompletableFuture.completedFuture( ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build().getBody().toString());
+
+        }
+        model.addAttribute("files", fileLists);
+        return  CompletableFuture.completedFuture("uploadForm");
     }
 
 

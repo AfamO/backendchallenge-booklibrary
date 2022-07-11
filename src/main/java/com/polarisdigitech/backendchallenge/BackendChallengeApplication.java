@@ -1,18 +1,22 @@
 package com.polarisdigitech.backendchallenge;
 
+import com.polarisdigitech.backendchallenge.algorithms.*;
 import com.polarisdigitech.backendchallenge.aop.Operation;
+import com.polarisdigitech.backendchallenge.exceptions.CustomAsyncExceptionHandler;
 import com.polarisdigitech.backendchallenge.helpers.Helpers;
 import com.polarisdigitech.backendchallenge.helpers.StorageProperties;
 import com.polarisdigitech.backendchallenge.model.book.Book;
 import com.polarisdigitech.backendchallenge.model.product.Student;
 import com.polarisdigitech.backendchallenge.model.product.Subject;
 import com.polarisdigitech.backendchallenge.model.product.Product;
+import com.polarisdigitech.backendchallenge.regex.RegularExpressions;
 import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.repository.product.ProductRepository;
 import com.polarisdigitech.backendchallenge.services.StorageService;
 import com.polarisdigitech.backendchallenge.services.StudentService;
 import com.polarisdigitech.backendchallenge.services.SubjectService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,15 +26,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.DefaultManagedTaskExecutor;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executor;
 
 @SpringBootApplication
 @Slf4j
-//@RequiredArgsConstructor
 @EnableConfigurationProperties(StorageProperties.class)
 public class BackendChallengeApplication implements CommandLineRunner {
 
@@ -47,6 +53,7 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		this.subjectService = subjectService;
 	}
 
+
 	public void invokeAOP(){
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Operation operation = (Operation) applicationContext.getBean("opBean");
@@ -58,6 +65,8 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		operation.k();
 
 	}
+
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendChallengeApplication.class, args);
@@ -110,6 +119,9 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		log.info("The createdAndNonStored storedProcedure queried result =={}",productRepository.findCarByYearWithNoNameStoredProcedure(2010));
 		log.info("The createdAndStoredProcedure queried result =={}",productRepository.countTotalProductsGivenAPrice(200));
 		//invokeAOP();
+		Solutions algorithmSolutions = new Solutions();
+		algorithmSolutions.testOtherAlgortihms();
+
 	}
 
 	@Bean

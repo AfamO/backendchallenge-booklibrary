@@ -1,11 +1,60 @@
 package com.polarisdigitech.backendchallenge.algorithms;
 
+import com.polarisdigitech.backendchallenge.regex.RegularExpressions;
+import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class Solutions {
+
+    public TreeNode<String> buildTree(){
+        TreeNode<String> root = new TreeNode<>("A",null);
+        TreeNode<String> left = root.addLeftChild("B");
+        TreeNode<String> right = root.addRightChild("C");
+        left.addLeftChild("D");
+        left.addRightChild("E");
+        right.addLeftChild("F");
+        right.addRightChild("G");
+
+        return root;
+
+    }
+
+    public void testOtherAlgortihms(){
+        new CuttingRodProblem().testCuttingRodDpProblem();
+        new DataStructures().mapManips();
+        new RegularExpressions().matchOneOrMoreNumbers();
+        SortingAlgorithms sortingAlgorithms = new SortingAlgorithms();
+        sortingAlgorithms.callSortingAlgorithms();
+        TreeNode<String> rootNode = buildTree();
+        BinarySearchTree<String> binarySearchTree = new BinarySearchTree<>(rootNode);
+        log.info("Level Order Traversal Results::");
+        binarySearchTree.levelOrderTraversal();
+        log.info("Binary Search  Results for P::"+binarySearchTree.binarySearch("P",rootNode));
+        log.info("Binary Search  Results for C::"+binarySearchTree.binarySearch("C",rootNode));
+        log.info("Binary Search  Results for Q::"+binarySearchTree.binarySearch("Q",rootNode));
+        TreeNode<String> emptyRoot = null;
+        log.info("Binary Search  Results for  empty Node::"+binarySearchTree.binarySearch("Q",emptyRoot));
+        emptyRoot = new TreeNode<>("Q",null);
+        log.info("Binary Search  Results for Node with NonEmptyValue::"+binarySearchTree.binarySearch("Q",emptyRoot));
+        binarySearchTree.insertIntoBinarySearchTree(rootNode,"H");
+        log.info("Level Order Traversal Results After Inserting H::");
+        binarySearchTree.levelOrderTraversal();
+        binarySearchTree.insertIntoBinarySearchTree(rootNode,"A");
+        log.info("Level Order Traversal Results After Inserting Already Existing A::");
+        binarySearchTree.levelOrderTraversal();
+        emptyRoot = null;
+        //binarySearchTree.insertIntoBinarySearchTree(emptyRoot,"H");
+        //log.info("Level Order Traversal Results After Inserting emptyRoot::");
+        //binarySearchTree.levelOrderTraversal();
+
+
+    }
 
     public int lengthOfLongestSubstring(String s) {
 
@@ -272,6 +321,56 @@ class FolderCrawler{
         }
         return out;
     }
+
+    /*
+     * Complete the 'minimalHeaviestSetA' function below.
+     *
+     * The function is expected to return an INTEGER_ARRAY.
+     * The function accepts INTEGER_ARRAY arr as parameter.
+     */
+
+    class AmazonInterview {
+
+        public  List<Integer> minimalHeaviestSetA(List<Integer> arr) {
+            // Write your code here
+
+            List<Integer> aSubList = new ArrayList<>();
+            List<Integer> result = new ArrayList<>();
+            //arr.sort((a,b)->a-b);
+            for(int i = 0; i < arr.size(); i++){
+                for(int j = i+1; j < arr.size(); j++){
+                    long suma = arr.get(i) + arr.get(j);
+                    final  int ii =i;
+                    final int  jj = j;
+                    List<Integer> tempSubList = arr.stream().
+                            filter((a)->a!=arr.get(ii) && a!=arr.get(jj)).collect(Collectors.toList());
+
+                    long sumList = sumList(tempSubList);
+                    //System.out.println("TempSubList =="+tempSubList+" CurrSum =="+suma+" firstA =="+arr.get(i)+" secondA =="+arr.get(j)+" subListSum =="+sumList);
+                    if(suma > sumList) {
+                        if(tempSubList.indexOf(arr.get(i)) ==-1 && tempSubList.indexOf(arr.get(j)) ==-1){
+                            aSubList.add(arr.get(i));
+                            aSubList.add(arr.get(j));
+                            aSubList.sort((a,b)->a-b);
+                            result.addAll(aSubList);
+                        }
+                    }
+                }
+            }
+
+            //System.out.println("Sum result =="+sumList(Arrays.asList(1,2,3)));
+            //System.out.println("SubList of arr =="+arr.subList(1, 4));
+
+            return result;
+        }
+
+        private  long sumList(List<Integer> arr){
+            //arr.sort((a,b)->a-b);
+            return arr.stream().reduce(Integer.valueOf(0), Integer::sum);
+
+        }
+    }
+
 
 }
 

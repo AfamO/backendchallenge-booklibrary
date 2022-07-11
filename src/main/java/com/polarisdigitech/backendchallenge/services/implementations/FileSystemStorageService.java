@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -25,6 +26,7 @@ import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @Service
@@ -52,7 +54,11 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile multipartFile) {
+    @Async(value = "afamTaskExecutor")
+    public CompletableFuture<Book> store(MultipartFile multipartFile) {
+        final long start = System.currentTimeMillis();
+        log.info("CurrentTime in Millis-> {}",start);
+
         if(multipartFile ==null || multipartFile.isEmpty()){
             throw  new StorageException("Multipart can't be null/empty");
         }
@@ -67,7 +73,10 @@ public class FileSystemStorageService implements StorageService {
             File renamedFile = new File(LocalDateTime.now().toString()+"_"+destinationFile.toFile().getName());
             destinationFile.toFile().renameTo(renamedFile);
             book.get().setPhoto(renamedFile.getName());
-            bookRepository.save(book.get());
+            log.info("Saving the book->{}",book);
+            Book savedBook = bookRepository.save(book.get());
+            log.info("Elapsed Time ->{}",System.currentTimeMillis()-start);
+            return CompletableFuture.completedFuture(savedBook);
         }
         catch (MaxUploadSizeExceededException sizeLimitExceededException){
             throw new StorageException("Ooops!, File size limit Exceeded. The file size can't be more than 128KB. Full Message::"+sizeLimitExceededException.getMessage());
@@ -79,11 +88,15 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Stream<Path> loadAll() {
+    @Async(value = "afamTaskExecutor")
+    public CompletableFuture<Stream<Path>> loadAll() {
+        log.info("Request to get a list of file paths");
         try {
-                return Files.walk(this.rootLocation,1)
-                        .filter(path -> !path.equals(rootLocation))
-                        .map(this.rootLocation::relativize);
+            Stream<Path> pathStream = Files.walk(this.rootLocation, 1)
+                    .filter(path -> !path.equals(rootLocation))
+                    .map(this.rootLocation::relativize);
+
+            return CompletableFuture.completedFuture(pathStream);
         }
         catch (IOException ioException){
             throw new StorageException("Failed to read and retrieve stored files");

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -99,7 +100,7 @@ public class ProductRepository {
         StoredProcedureQuery storedProcedureQuery =
                 storedProcedureFindByYearQuery.setParameter("p_year", year);
       List<Car> carList  =  storedProcedureQuery.getResultList();
-      log.info("The storedProcedure queried result =={}",carList);
+      log.info("The storedProcedure-via async- queried result =={}",carList);
     }
 
     public List<Car> findCarByYearWithNoNameStoredProcedure(int year) {

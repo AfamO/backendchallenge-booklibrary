@@ -16,25 +16,26 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/BookLibrary/books")
 public class BookController {
 
     @Autowired
     private BookService bookService;
     
-    @PostMapping("/addBook")
+    @PostMapping("addBook")
     public BookResponse addBook(@RequestBody BookRequest bookRequest) {
         log.info("Attempting to add a book with isbn: {} ",bookRequest.getIsbn());
 
         return this.bookService.addBooks(bookRequest);
     }
 
-    @PutMapping("/updateBook")
+    @PutMapping("updateBook")
     public BookResponse updateBook(@RequestBody BookRequest bookRequest) {
 
         return this.bookService.addBooks(bookRequest);
     }
 
-    @RequestMapping(value = "/books", method = RequestMethod.GET)
+    @GetMapping("")
     private Iterable<Book> getBooks() {
 
         Sort sort = Sort.by(Sort.Direction.ASC,"author");
@@ -43,15 +44,15 @@ public class BookController {
     }
 
 
-    @RequestMapping("/books/by/{author}")
+    @GetMapping("/books/by/{author}")
     private List<Book> getBooksByAuthor(@PathVariable String author) {
         return bookService.getBookByAuthor(author);
     }
-    @RequestMapping("/books/by/gender/{gender}")
+    @GetMapping("/books/by/gender/{gender}")
     private List<Book> getBooksByGender(@PathVariable String gender) {
         return bookService.getBookByGender(gender);
     }
-    @RequestMapping("/books/{isbn}")
+    @GetMapping("/books/{isbn}")
     private BookResponse getBook(@PathVariable("isbn")String isbn) {
         return bookService
                 //.getOne(isbn) ;
