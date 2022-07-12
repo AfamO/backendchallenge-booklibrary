@@ -14,8 +14,8 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book,String> {
 
 
-   @Query("SELECT b FROM Book b where lower(b.author) = LOWER(:author) ")
-   List<Book> selectMyBookByAuthor(String author);
+
+   public List<Book>findByAuthor(String author);
    @Query("SELECT b FROM Book b WHERE LOWER(b.gender) = LOWER(:gender)")
    List<Book> selectMyBookByGender(String gender);
    @Query("SELECT b FROM Book b WHERE b.gender = ?1")
@@ -27,7 +27,7 @@ public interface BookRepository extends JpaRepository<Book,String> {
    @Query("SELECT book FROM Book book WHERE book.isbn=:isbn AND book.country=:country")
    Book selectByIsbnAndCountry(@Param("isbn")String myIsbn,@Param("country")String myCountry);
    @Query(value = "SELECT * FROM Book b WHERE b.country=:country", nativeQuery = true, countQuery = "SELECT count(*) WHERE country=?1")
-   Page<List<Book>> selectBookByCountry(String country, Pageable pageable);
+   Page<Book> selectBookByCountry(String country, Pageable pageable);
    @Query(value = "SELECT * FROM Book book WHERE book.gender IN :genderList",nativeQuery = true)
    List<Book> selectBooksHavingParticularGender(List<String> genderList);
    @Transactional

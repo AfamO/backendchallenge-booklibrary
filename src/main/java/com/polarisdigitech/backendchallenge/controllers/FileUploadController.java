@@ -1,5 +1,6 @@
 package com.polarisdigitech.backendchallenge.controllers;
 
+import com.polarisdigitech.backendchallenge.helpers.Constants;
 import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.services.StorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("")
+@RequestMapping(Constants.API_PATH+"upload")
 @Slf4j
 public class FileUploadController {
 
@@ -45,7 +46,13 @@ public class FileUploadController {
         log.info("Uploaded fileName::{}",multipartFile.getOriginalFilename());
         storageService.store(multipartFile);
         redirectAttributes.addFlashAttribute("message","You successfully uploaded " + multipartFile.getOriginalFilename() + "!");
-        return "redirect:/uploadForm";
+        return "redirect:"+Constants.API_PATH+"upload/uploadForm";
+    }
+
+    @GetMapping("/uploadForm")
+    public String showUploadFormPage(Model model){
+        log.info("Received incoming requests for uploadForm BookViewController");
+        return "uploadForm";
     }
 
     @GetMapping("/files/{filename:.+}")

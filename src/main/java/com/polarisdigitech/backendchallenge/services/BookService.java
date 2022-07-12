@@ -4,8 +4,13 @@ package com.polarisdigitech.backendchallenge.services;
 import com.polarisdigitech.backendchallenge.model.book.Book;
 import com.polarisdigitech.backendchallenge.repository.book.BookRepository;
 import com.polarisdigitech.backendchallenge.request.BookRequest;
+import com.polarisdigitech.backendchallenge.request.XMLBookRequest;
 import com.polarisdigitech.backendchallenge.response.BookResponse;
+import com.polarisdigitech.backendchallenge.response.XMLBookResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +21,10 @@ import java.util.List;
 public class BookService {
 
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+
+    @Autowired
+    private  ModelMapper mapper;
 
     public BookResponse addBooks(BookRequest bookRequest) {
         BookResponse bookResponse = new BookResponse();
@@ -70,7 +78,13 @@ public class BookService {
     }
     
     public List<Book> getBookByAuthor(String author) {
-        return bookRepository.selectMyBookByAuthor(author);
+        return bookRepository.findByAuthor(author);
+    }
+
+    public XMLBookResponse getXMLBook(XMLBookRequest xmlBookRequest){
+        XMLBookResponse xmlBookResponse = new XMLBookResponse(xmlBookRequest.getIsbn(),xmlBookRequest.getTitle(), xmlBookRequest.getAuthor());
+        return xmlBookResponse;
+        //return mapper.map(xmlBookRequest,XMLBookResponse.class);
     }
     public List<Book> getBookByGender(String gender) {
         return bookRepository.selectMyBookByGender(gender);
@@ -119,5 +133,9 @@ public class BookService {
         bookResponse.setStatus(500);
         bookResponse.setMessage("Failed");
         return bookResponse;
+    }
+    @Bean
+    private ModelMapper getMapper(){
+        return new ModelMapper();
     }
 }

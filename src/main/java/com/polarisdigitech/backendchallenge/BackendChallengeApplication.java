@@ -92,7 +92,7 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		//log.info("Saved Another Book {}",bookRepository.save(new Book("012-123-456700","Problem of Pain","CS Lewis")));
 		//log.info("Saved BookRepository =={}",bookRepository.saveAll(bookList));
 		log.info("Retrieved Single Book=={}",bookRepository.selectByIsbnAndGender("012-123-4567,89","female"));
-		Page<List<Book>> listPage = bookRepository.selectBookByCountry("Nigeria", PageRequest.of(0,5));
+		Page<Book> listPage = bookRepository.selectBookByCountry("Nigeria", PageRequest.of(0,5));
 		log.info("Pageable Results =={}",listPage.getContent());
 		log.info("Retrieved Book List =={}",bookRepository.selectMyBookByGender("male"));
 		//log.info("Update Result =={}",bookRepository.updateCount("Criterion Publishers","012-123-456700"));
