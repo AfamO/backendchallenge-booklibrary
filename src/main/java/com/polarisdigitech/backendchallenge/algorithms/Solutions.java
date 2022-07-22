@@ -2,6 +2,7 @@ package com.polarisdigitech.backendchallenge.algorithms;
 
 import com.polarisdigitech.backendchallenge.regex.RegularExpressions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -23,6 +24,227 @@ public class Solutions {
 
         return root;
 
+    }
+    public void testingSwitch(){
+        String op = "D";
+        switch (op){
+            case "C":{
+                log.info("Printing "+op);
+                break;
+            }
+            case "D" :{
+                log.info("Printing "+op);
+            }
+            default:
+                log.info("Printing Nothing...");
+        }
+    }
+
+    public void reverseMatrixColumn(){
+        List<Integer> col = new ArrayList<>();
+        long maxCol = -1;
+        int maxColIndex = -1;
+        List<List<Integer>> matrix = new ArrayList<>();
+        //**
+        col = Arrays.asList(1,3);
+        matrix.add(col);
+        col = Arrays.asList(2,4);
+        matrix.add(col);
+
+         /**
+        // New Matrix
+
+          col = Arrays.asList(1,2,3);
+          matrix.add(col);
+          col = Arrays.asList(4,5,6);
+          matrix.add(col);
+          col = Arrays.asList(7,8,9);
+          matrix.add(col);
+
+        // New Matrix
+
+          col = Arrays.asList(112,42,83,119);
+          matrix.add(col);
+          col = Arrays.asList(56,125, 56,49);
+          matrix.add(col);
+          col = Arrays.asList(15,78,101,43);
+          matrix.add(col);
+          col = Arrays.asList(62,98,114,108);
+          matrix.add(col);
+          */
+
+        log.info("The  Matrix before Reversal =="+Arrays.asList(matrix));
+        //this.reverseColumnAndRow(matrix);
+        log.info("The  Final Matrix =="+Arrays.asList(matrix));
+        log.info("The maximal Sum of Matrix Quarter Quadrant=="+this.sumMaximalQuadrant(matrix));
+        int arr [] = new int[]{2,3,5,1,4};
+        log.info("The ZigZag Arr =="+this.findArrayZigZagSequence(arr));
+        arr = new int[]{1,2,3,4,5,6,7};
+        log.info("The ZigZag Arr =="+this.findArrayZigZagSequence(arr));
+        long start = System.nanoTime();
+
+        log.info("The palindromeIndex =="+this.getPalindromeIndex("kjowoemiduaaxasnqghxbxkiccikxbxhgqnsaxaaudimeowojk"));
+        long end  = System.nanoTime();
+        log.info("The TimeTakeInMillis =="+(end-start)/1000000000);
+        new ParameterizedTypeReference<List<String>>(){};
+
+    }
+
+    public List<Integer> findArrayZigZagSequence(int arr[]){
+        Arrays.sort(arr); // sorts the array first.
+
+        int max = arr[arr.length-1]; // get the max value.
+
+        int mid = arr.length/2;  // get the middle index/position;
+
+        Integer [] zigZagArr = new Integer[arr.length];
+
+        int k = (arr.length+1)/2; // get the k position
+
+        //loop through k times
+
+        //Insert increasing values in front
+        for (int i = 0; i <=mid; i++){
+            if (i == mid)
+                zigZagArr[mid] = max;
+            else
+                zigZagArr[i] = arr[i];
+        }
+        int l = mid+1; // increment mid, so the descending values will start from there.
+        //Insert decreasing at the back of kth element-I mean the max
+        for (int  j = arr.length-2;  j >=mid ; j--){
+             zigZagArr[l++] = arr[j];
+        }
+        return Arrays.asList(zigZagArr);
+    }
+
+    //Anther way to do Zigzag
+    public static void findZigZagSequence(int [] a, int n){
+        Arrays.sort(a);
+        int mid = (n)/2;
+        int temp = a[mid];
+        a[mid] = a[n - 1];
+        a[n - 1] = temp;
+
+        int st = mid + 1;
+        int ed = n - 2;
+        while(st <= ed){
+            temp = a[st];
+            a[st] = a[ed];
+            a[ed] = temp;
+            st = st + 1;
+            ed = ed - 1;
+        }
+        for(int i = 0; i < n; i++){
+            if(i > 0) System.out.print(" ");
+            System.out.print(a[i]);
+        }
+        System.out.println();
+    }
+
+    /**
+    Get the index that makes this string a palindrome
+     */
+    public int getPalindromeIndex(String string){
+        StringBuilder sb = new StringBuilder(string);
+        if(string.equals(sb.reverse().toString())){
+            return -1;
+        }
+        for (int i = 0; i < string.length(); i++){
+            //sb.deleteCharAt(i);;
+            sb = new StringBuilder(string.substring(0,i)+string.substring(i+1));
+            //System.out.println("After deleting sb =="+sb);
+            if (sb.toString().equals(sb.reverse().toString()))
+                return i;
+        }
+        return -1;
+    }
+
+    public  long sumMaximalQuadrant(List<List<Integer>> matrix){
+        int size = matrix.size()/2;
+        long totalMax = 0;
+        int currMax = 0;
+        for (int row = 0; row < size; row++){
+
+            for (int col = 0; col < size; col++){
+                currMax = Integer.MIN_VALUE; // set the max to the current smallest integer value
+                currMax = Math.max(matrix.get(row).get(col),currMax);
+                int horizontalFocusedSwapIndex = (2*size)-1-col;
+                currMax = Math.max(matrix.get(row).get(horizontalFocusedSwapIndex),currMax);
+                int verticalFocusedSwapIndex = (2*size)-1-row;
+                currMax = Math.max(matrix.get(verticalFocusedSwapIndex).get(col),currMax);
+                currMax = Math.max(matrix.get(verticalFocusedSwapIndex).get(horizontalFocusedSwapIndex),currMax);
+                totalMax+= currMax;  // adds the currMax to the previously accumulated one.
+            }
+        }
+        return totalMax;
+    }
+    public long sumOfUpperLeftSubMatrix(List<List<Integer>> matrix) {
+        int row = matrix.get(0).size()/2;
+        int col = matrix.size()/2;
+        long sum  = 0;
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j< col; j++){
+                int val = matrix.get(i).get(j);
+                sum+= val;
+            }
+        }
+        return sum;
+    }
+    public int getMatrixMaxColumnIndex(List<List<Integer>> matrix) {
+       List<Integer> col = null;
+       long maxColSum= -1;
+       int maxColIndex = -1;
+        for (int j = 0; j < matrix.get(0).size();j++ ){
+            col = new ArrayList<>();
+            for (int i = 0; i< matrix.size(); i++){
+                col.add(matrix.get(i).get(j));
+            }
+            long sum = col.stream().mapToLong(l->l).sum();
+
+            if (maxColSum < sum)
+            {
+                maxColSum = sum;
+                maxColIndex = j;
+            }
+        }
+        log.info("The maxColIndex  Col =="+maxColIndex);
+        return maxColIndex;
+    }
+    public int getMatrixMaxRowIndex(List<List<Integer>> matrix){
+        long maxRowSum = -1;
+        int maxRowIndex = -1;
+        for (int i =0; i < matrix.size(); i++){
+            long sum = matrix.get(i).stream().mapToLong((l)->l).sum();
+            if (maxRowSum < sum)
+            {
+                maxRowSum =sum;
+                maxRowIndex = i;
+            }
+        }
+        log.info("The maxRowIndex  Col =="+maxRowIndex);
+        return maxRowIndex;
+    }
+
+    public void reverseColumnAndRow(List<List<Integer>> matrix){
+        int maxCol = this.getMatrixMaxColumnIndex(matrix);
+        for (int row = 0; row < matrix.size()/2; row++){
+            int temp= matrix.get(row).get(maxCol);
+            int valTobeSwappedWith = matrix.get((matrix.size()-1-row)).get(maxCol);
+            matrix.get(row).set(maxCol,valTobeSwappedWith);
+            matrix.get((matrix.size()-1-row)).set(maxCol,temp);
+        }
+        log.info("The  Final Matrix After columnReversal =="+Arrays.asList(matrix));
+
+        // Now reverse Column as well
+        int maxRow = this.getMatrixMaxRowIndex(matrix);
+        for (int col = 0; col < matrix.get(maxRow).size()/2; col++){
+            int temp = matrix.get(maxRow).get(col);
+            int valTobeSwappedWith = matrix.get(maxRow).get((matrix.get(maxRow).size()-1-col));
+            matrix.get(maxRow).set(col,valTobeSwappedWith);
+            matrix.get(maxRow).set((matrix.get(maxRow).size()-1-col),temp);
+
+        }
     }
 
     public void testOtherAlgortihms(){
@@ -52,6 +274,7 @@ public class Solutions {
         //binarySearchTree.insertIntoBinarySearchTree(emptyRoot,"H");
         //log.info("Level Order Traversal Results After Inserting emptyRoot::");
         //binarySearchTree.levelOrderTraversal();
+        reverseMatrixColumn();
 
 
     }
@@ -370,7 +593,6 @@ class FolderCrawler{
 
         }
     }
-
 
 }
 

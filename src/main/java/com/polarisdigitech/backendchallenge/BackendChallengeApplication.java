@@ -121,6 +121,7 @@ public class BackendChallengeApplication implements CommandLineRunner {
 		//invokeAOP();
 		Solutions algorithmSolutions = new Solutions();
 		algorithmSolutions.testOtherAlgortihms();
+		//log.info("parseInt=="+Integer.parseInt("D"));
 
 	}
 
