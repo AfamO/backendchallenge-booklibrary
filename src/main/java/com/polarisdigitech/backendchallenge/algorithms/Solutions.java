@@ -86,7 +86,11 @@ public class Solutions {
         log.info("The palindromeIndex =="+this.getPalindromeIndex("kjowoemiduaaxasnqghxbxkiccikxbxhgqnsaxaaudimeowojk"));
         long end  = System.nanoTime();
         log.info("The TimeTakeInMillis =="+(end-start)/1000000000);
-        new ParameterizedTypeReference<List<String>>(){};
+        char [] letters = "ebcad".toCharArray();
+        Arrays.sort(letters);
+
+
+        log.info("The sorted letters =="+new String(letters));
 
     }
 
